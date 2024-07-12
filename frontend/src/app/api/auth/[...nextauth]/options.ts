@@ -1,19 +1,17 @@
 import type { NextAuthOptions } from "next-auth"
-import {PrismaClient} from "@prisma/client";
-import {PrismaAdapter} from "@auth/prisma-adapter";
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import clientPromise from "../../../../lib/db"
 import Google from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import YandexProvider from "next-auth/providers/yandex";
 
-const prisma = new PrismaClient()
-
 export const options: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma),
+    adapter: MongoDBAdapter(clientPromise),
     providers: [
         Google({
-            clientId: process.env.NEXT_PUBLIC_CLIENT_ID as string,
-            clientSecret: `process.env.GOOGLE_CLIENT_SECRET as string`,
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
         GitHubProvider({
             clientId: process.env.GITHUB_ID as string,
@@ -40,6 +38,8 @@ export const options: NextAuthOptions = {
 
                 }
             }
-        })
+        }),
     ],
+    secret: process.env.NEXTAUTH_SECRET as string,
+    debug: true,
 }

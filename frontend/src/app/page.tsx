@@ -1,22 +1,22 @@
-"use client"
-import {useSession} from "next-auth/react";
-import SignInButton from "@/component/SignInButton/SignInButton";
-import {redirect} from "next/navigation";
+"use server"
+import {getServerSession, Session} from "next-auth";
+import {options} from "@/app/api/auth/[...nextauth]/options";
+import {Box} from "@chakra-ui/react";
+import Chat from "@/component/Chat/Chat";
+import Auth from "@/component/Auth/Auth";
 
-export default function Page() {
-    const {data: session} = useSession({
-        required: true,
-        onUnauthenticated(){
-            redirect(`api/auth/signin?callbackUrl=/client`)
-        }
-    })
+export default async function Page() {
+    const session  = await getServerSession(options);
 
-    console.log(session)
 
+
+
+
+    console.log(session , "session")
 
     return (
-        <div>
-            <SignInButton/>
-        </div>
+       <Box>
+           {session?.user?.username ? <Chat/> : <Auth session={session} />}
+       </Box>
     )
 }
