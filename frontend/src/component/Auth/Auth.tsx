@@ -3,15 +3,20 @@ import {FC, useState} from "react";
 import {Button, Center, Input, Stack, Text} from "@chakra-ui/react";
 import {signIn} from "next-auth/react";
 import {Session} from "next-auth";
+import {useMutation} from "@apollo/client";
+import UserOperations from '../../graphql/operations/user'
+import {CrateUsernameVariables, CreateUsernameData} from "@/util/types";
 
 interface AuthProps {
     session: Session | null;
 }
 
+
 const Auth: FC<AuthProps> = ({
                                  session
                              }) => {
     const [username, setUsername] = useState<string>("");
+    const [createUsername, {data, loading, error}] = useMutation<CreateUsernameData, CrateUsernameVariables>(UserOperations.Mutations.createUsername);
 
     const reloadSession = () => {
 
@@ -19,8 +24,10 @@ const Auth: FC<AuthProps> = ({
 
 
     const onSubmit = async () => {
-        try {
+        if (!username) return;
 
+        try {
+            await createUsername({ variables: {username}});
         } catch(error) {
             console.error(error)
         }
