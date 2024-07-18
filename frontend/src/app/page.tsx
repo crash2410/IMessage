@@ -9,14 +9,9 @@ export default async function Page() {
     const session  = await getServerSession(options);
 
 
-
-
-
-    console.log(session , "session")
-
     return (
-       <Box>
-           {session?.user?.username ? <Chat/> : <Auth session={session} />}
-       </Box>
+        <Box>
+                {session?.user?.username ? <Chat/> : <Auth session={session}/>}
+            </Box>
     )
 }

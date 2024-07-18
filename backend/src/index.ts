@@ -1,7 +1,7 @@
-import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import {ApolloServer} from '@apollo/server';
+import {startStandaloneServer} from '@apollo/server/standalone';
+import {makeExecutableSchema} from "@graphql-tools/schema";
+import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import typeDefs from "./graphql/typeDefs";
 import resolvers from './graphql/resolvers'
 // @ts-ignore
@@ -10,8 +10,14 @@ import express from 'express';
 import http from 'http';
 // @ts-ignore
 import cors from 'cors';
+import { json } from "body-parser";
 import {expressMiddleware} from "@apollo/server/express4";
 import * as dotenv from "dotenv"
+import {getSession} from "next-auth/react";
+import {getServerSession} from "./util/getServerSession";
+import {GraphQLContext} from "./util/types";
+import { PrismaClient } from "@prisma/client";
+import {connectToDatabase, getDb} from "./mongodb/db";
 
 async function main() {
     dotenv.config();
@@ -29,10 +35,11 @@ async function main() {
         csrfPrevention: true,
         cache: "bounded",
         plugins: [
-            ApolloServerPluginDrainHttpServer({ httpServer })
-        ],
+            ApolloServerPluginDrainHttpServer({httpServer})
+        ]
     });
 
+    await connectToDatabase();
     await server.start();
 
     const corsOptions = {
@@ -43,13 +50,23 @@ async function main() {
     app.use(
         '/graphql',
         cors<cors.CorsRequest>(corsOptions),
-        express.json(),
+        json(),
         expressMiddleware(server, {
-            context: async ({ req }) => ({ token: req.headers.token }),
+            context: async ({req, res}): Promise<GraphQLContext>=> {
+                if (req.headers.cookie) {
+                   let session = await getServerSession(req.headers.cookie)
+                    return {session: session , mongodb: getDb()}
+                } else {
+                    return {
+                        session: null,
+                        mongodb: getDb()
+                    }
+                }
+            },
         }),
     );
 
-    await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+    await new Promise<void>((resolve) => httpServer.listen({port: 4000}, resolve));
     console.log(`🚀 Server ready at http://localhost:4000/`);
 }
 

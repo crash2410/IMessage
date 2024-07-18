@@ -6,7 +6,9 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import YandexProvider from "next-auth/providers/yandex";
 
+
 export const options: NextAuthOptions = {
+    // @ts-ignore
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         Google({
@@ -21,25 +23,18 @@ export const options: NextAuthOptions = {
             name: "Яндекс",
             clientId: process.env.YANDEX_CLIENT_ID as string,
             clientSecret: process.env.YANDEX_CLIENT_SECRET as string,
-        }),
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password" }
-            },
-            async authorize(credentials, req) {
-                const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
-
-                if (user) {
-                    return user
-                } else {
-                    return null
-
-                }
-            }
-        }),
+        })
     ],
     secret: process.env.NEXTAUTH_SECRET as string,
-    debug: true,
+    callbacks: {
+        async session({ session, token, user }) {
+            const sessionUser = { ...session.user, ...user };
+
+            return Promise.resolve({
+                ...session,
+                user: sessionUser,
+            });
+        },
+    }
+
 }
