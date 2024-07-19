@@ -1,5 +1,5 @@
 import { Session } from "next-auth";
-import {Db} from "mongodb";
+import {Db, ObjectId} from "mongodb";
 
 
 
@@ -16,4 +16,17 @@ export interface GraphQLContext {
 export interface CreateUsernameResponse {
     success?: boolean;
     error?: string
+}
+
+export interface SearchUsersResponse {
+    _id?: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    emailVerified?:  any,
+    username?: string,
+}
+
+export interface ErrorResponse {
+    error: string;
 }

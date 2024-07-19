@@ -23,6 +23,7 @@ const ConversationsModal: FC<ModalProp> = ({isOpen,onClose}) => {
     const [username, setUsername] = useState<string>("");
     const [searchUsers, { data, error, loading }] = useLazyQuery<SearchUsersData, SearchUsersInput>(UserOperations.Queries.searchUsers);
 
+    console.log(data, "USERS LIST")
 
     const onSearch = async (event : FormEvent) => {
         event.preventDefault();
