@@ -13,6 +13,7 @@ import {
 import {useLazyQuery} from "@apollo/client";
 import UserOperations from "@/graphql/operations/user";
 import {SearchUsersData, SearchUsersInput} from "@/util/types";
+import UserSearchList from "@/component/Chat/Conversations/Modal/UserSearchList";
 
 interface ModalProp {
     isOpen: boolean,
@@ -36,7 +37,7 @@ const ConversationsModal: FC<ModalProp> = ({isOpen,onClose}) => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <ModalContent bg="gray.800" pb={4}>
-                    <ModalHeader>Modal Title</ModalHeader>
+                    <ModalHeader>Найти или создать беседу</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
                         <form onSubmit={onSearch}>
@@ -48,6 +49,7 @@ const ConversationsModal: FC<ModalProp> = ({isOpen,onClose}) => {
                              <Button type={"submit"} disabled={!username}>Найти</Button>
                             </Stack>
                         </form>
+                        {data?.searchUsers && <UserSearchList users={data?.searchUsers}/>}
                     </ModalBody>
                 </ModalContent>
             </Modal>
