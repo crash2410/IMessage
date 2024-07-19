@@ -10,6 +10,9 @@ import {
     ModalOverlay, Stack,
     Text,
 } from "@chakra-ui/react";
+import {useLazyQuery} from "@apollo/client";
+import UserOperations from "@/graphql/operations/user";
+import {SearchUsersData, SearchUsersInput} from "@/util/types";
 
 interface ModalProp {
     isOpen: boolean,
@@ -18,10 +21,13 @@ interface ModalProp {
 
 const ConversationsModal: FC<ModalProp> = ({isOpen,onClose}) => {
     const [username, setUsername] = useState<string>("");
+    const [searchUsers, { data, error, loading }] = useLazyQuery<SearchUsersData, SearchUsersInput>(UserOperations.Queries.searchUsers);
+
 
     const onSearch = async (event : FormEvent) => {
         event.preventDefault();
 
+        await searchUsers({variables: {username}});
     }
 
     return (
