@@ -6,12 +6,12 @@ import Chat from "@/component/Chat/Chat";
 import Auth from "@/component/Auth/Auth";
 
 export default async function Page() {
-    const session  = await getServerSession(options);
+    const session = await getServerSession(options);
 
 
     return (
         <Box>
-                {session?.user?.username ? <Chat/> : <Auth session={session}/>}
-            </Box>
+            {session?.user?.username ? <Chat session={session}/> : <Auth session={session}/>}
+        </Box>
     )
 }

@@ -26,7 +26,7 @@ const Auth: FC<AuthProps> = ({
         try {
            const {data} = await createUsername({ variables: {username}});
 
-           if (data?.createUserName?.error !== null){
+           if (data?.createUserName?.error != null){
                toast.error("Ошибка при создании логина!");
                return;
            }
@@ -61,7 +61,7 @@ const Auth: FC<AuthProps> = ({
                             value={username}
                             onChange={(event) => setUsername(event.target.value)}
                         />
-                        <Button width={"100%"} onClick={onSubmit}>Сохранить</Button>
+                        <Button width={"100%"} onClick={onSubmit} isLoading={loading}>Сохранить</Button>
                     </>
                 ) : (
                     <>
