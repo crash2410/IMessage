@@ -31,7 +31,7 @@ const ConversationsList: FC<ConversationsListProps> = ({session}) => {
                     Найти или начать беседу
                 </Text>
             </Box>
-            <ConversationsModal isOpen={isOpen} onClose={onClose}/>
+            <ConversationsModal session={session} isOpen={isOpen} onClose={onClose}/>
         </Box>
     );
 };

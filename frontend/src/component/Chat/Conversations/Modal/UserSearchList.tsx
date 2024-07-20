@@ -3,10 +3,11 @@ import {SearchedUser} from "@/util/types";
 import {Avatar, Flex, Stack, Text, Button} from "@chakra-ui/react";
 
 interface UserSearchListProps {
-    users: Array<SearchedUser>
+    users: Array<SearchedUser>;
+    addParticipants: (user: SearchedUser) => void
 }
 
-const UserSearchList = ({users} : UserSearchListProps) => {
+const UserSearchList = ({users, addParticipants} : UserSearchListProps) => {
     return (
         <>
             {users.length === 0 ? (
@@ -25,7 +26,7 @@ const UserSearchList = ({users} : UserSearchListProps) => {
                                     <Button
                                         bg="brand.100"
                                         _hover={{bg: "brand.100"}}
-                                        onClick={() => {}}
+                                        onClick={() => addParticipants(user)}
                                     >
                                         Выбрать
                                     </Button>
