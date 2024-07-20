@@ -13,8 +13,8 @@ const options = {
     },
 }
 
-export async function connectToDatabase(): Promise<void> {
-    if (db) return; // Если база данных уже подключена, ничего не делаем
+export async function connectToDatabase(): Promise<MongoClient | null> {
+    if (db) return null; // Если база данных уже подключена, ничего не делаем
 
     dotenv.config();
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
@@ -27,6 +27,7 @@ export async function connectToDatabase(): Promise<void> {
         console.log('Connected to MongoDB');
 
         db = client.db(dbName);
+        return client
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;

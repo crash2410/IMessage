@@ -1,11 +1,12 @@
 import { Session } from "next-auth";
-import {Db, ObjectId} from "mongodb";
+import {Db, MongoClient, ObjectId} from "mongodb";
 
 
 
 export interface GraphQLContext {
     session: Session | null;
-    mongodb: Db
+    mongodb: Db,
+    mongoClient: MongoClient | null
     // pubsub
 }
 

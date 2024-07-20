@@ -39,7 +39,7 @@ async function main() {
         ]
     });
 
-    await connectToDatabase();
+    const mongoClient = await connectToDatabase();
     await server.start();
 
     const corsOptions = {
@@ -55,11 +55,12 @@ async function main() {
             context: async ({req, res}): Promise<GraphQLContext>=> {
                 if (req.headers.cookie) {
                    let session = await getServerSession(req.headers.cookie)
-                    return {session: session , mongodb: getDb()}
+                    return {session: session , mongodb: getDb(), mongoClient: mongoClient}
                 } else {
                     return {
                         session: null,
-                        mongodb: getDb()
+                        mongodb: getDb(),
+                        mongoClient: mongoClient
                     }
                 }
             },

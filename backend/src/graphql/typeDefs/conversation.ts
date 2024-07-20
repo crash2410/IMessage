@@ -3,7 +3,7 @@ import {graphql} from "graphql/graphql";
 const typeDefs = `#graphql
 
     type Mutation {
-        createConversation(participantIds: [String]): CreateConversationResponse
+        createConversation(participantsIds: [String]): CreateConversationResponse
     }
 
     type CreateConversationResponse {

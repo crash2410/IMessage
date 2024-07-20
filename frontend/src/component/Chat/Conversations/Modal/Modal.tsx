@@ -40,11 +40,12 @@ const ConversationsModal: FC<ModalProp> = ({isOpen,onClose, session}) => {
     const [createConversation, {loading: createConversationLoading}] = useMutation<CreateConversationData, CreateConversationInput>(ConversationOperations.Mutations.createConversation)
 
     const onCreateConversation = async () => {
-        const participantIds = [userId, ...participants.map(p => p.id)]
+        const participantsIds = [userId, ...participants.map(p => p.id)]
+
         try {
         const {data} = await createConversation({
             variables: {
-                participantIds
+                participantsIds
             }
         })
             console.log(`onCreateConversation DATA`, data)
